@@ -1,3 +1,5 @@
+package ohtu.verkkokauppa;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -228,4 +230,31 @@ public class KauppaTest {
         verify(pankki).tilisiirto(eq("Teemu"), eq(45), eq("54345"), eq("33333-44455"), eq(10));
     }
     
+    @Test
+    public void palauttaaVarastoonTest() {
+
+        // luodaan kolme mock-olioa
+        Varasto varasto = mock(Varasto.class);
+        Pankki pankki = mock(Pankki.class);
+        Viitegeneraattori viite = mock(Viitegeneraattori.class);
+
+        when(varasto.haeTuote(1)).thenReturn(new Tuote(1, "maito", 5));
+
+        // injektoidaan ne kaupalle normaalien olioiden tapaan
+        kauppa = new Kauppa(varasto, pankki, viite);
+        
+        kauppa.lisaaKoriin(1);
+        kauppa.lisaaKoriin(1);
+        kauppa.poistaKorista(1);
+       
+        verify(varasto).haeTuote(eq(1));
+        Tuote t = varasto.haeTuote(1);
+        verify(varasto).palautaVarastoon(t);
+        
+        
+
+    }
+
+    
 }
+
